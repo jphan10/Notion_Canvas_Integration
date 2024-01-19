@@ -1,0 +1,9 @@
+current state of program:
+
++can pull assignments given a course ID
++can create a notion page
+
+goals:
+
+-use loop in createNotionPage() to utlize assignments array
+-put createNotionPage() at the bottom of get_assignments fucntion
