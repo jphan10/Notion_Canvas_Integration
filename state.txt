@@ -1,9 +1,13 @@
 current state of program:
 
-+can pull assignments given a course ID
-+can create a notion page
++can pull assignments given a course ID and creates notion database pages with information
 
 goals:
 
--use loop in createNotionPage() to utlize assignments array
--put createNotionPage() at the bottom of get_assignments fucntion
+- implement helper functions to clean up code organization
+- check for duplicates before posting page
+- impletement a way to populate the correct course in the course field
+- pull assignments from all current classes instead of just one
+- automatically run the script to update
+- figure out how to allow users to sign in and auto generate api keys to deploy to others
+- build UI for deployment
