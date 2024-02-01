@@ -4,6 +4,7 @@ current state of program:
 
 goals:
 
+- use Notion API selection menu to fill course ID section when posting
 - implement helper functions to clean up code organization
 - check for duplicates before posting page
 - impletement a way to populate the correct course in the course field
