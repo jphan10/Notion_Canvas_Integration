@@ -6,7 +6,26 @@ const notion = new Client({ auth: process.env.NOTION_KEY });
 
 let assignmentArray = [];
 const accessToken = process.env.CANVAS_ID;
-const canvasApiUrl = `https://canvas.gonzaga.edu`;
+const canvasApiUrl = process.env.URL;
+
+courseIDs = [12901, 11277, 12906, 11112, 11580, 10315];
+
+async function get_course_name(courseId){
+    switch(courseId){
+        case 12901:
+            return "CPSC-260";
+        case 11277:
+            return "BMIS-235";
+        case 12906:
+            return "COMM-100";
+        case 11112:
+            return "CPSC-224";
+        case 11580:
+            return "CPSC-326";
+        case 10315:
+            return "MATH-321";
+    }
+}
 
 async function get_assignments(courseId) {
     try {
@@ -24,11 +43,14 @@ async function get_assignments(courseId) {
 
                 const formattedAssignment = {
                     name: assignment.name,
-                    date: dueDate.toISOString().split('T')[0],
+                    date: dueDate.toISOString(),
                     points_possible: assignment.points_possible,
-                };
+                    course_name: get_course_name(courseId),
 
-                assignmentArray.push(formattedAssignment);
+                };
+                if(formattedAssignment.date > "2024-01-24"){ //change to pull current date
+                    assignmentArray.push(formattedAssignment);
+                }
             } catch (error) {
                 console.error(`Error processing assignment: ${error.message}`);
             }
@@ -37,9 +59,15 @@ async function get_assignments(courseId) {
         console.error('Error fetching assignments:', error.message);
         throw error;
     }
+    createNotionPage()
 }
 
 const courseID = 10315;
+
+for( let courseID of courseIDs){
+    get_assignments(courseID)
+}
+
 //get_assignments(courseID)
 //    .then(() => {
 //console.log(assignmentArray);
@@ -50,6 +78,7 @@ const sleep = (milliseconds) => {
 };
 
 async function createNotionPage() {
+    for (let assignment of assignmentArray) {
         const data = {
             "parent": {
                 "type": "database_id",
@@ -60,24 +89,23 @@ async function createNotionPage() {
                     "title": [
                         {
                             "text": {
-                                "content": "test"
+                                "content": assignment.name
                             }
                         }
                     ]
                 },
                 "date": {
                     "date": {
-                        "start": "2023-02-23"
+                        "start": assignment.date
                     }
                 },
             }
         }
-        await sleep(300)
+        await sleep(100)
 
         console.log(`Sending to Notion`)
         const response = await notion.pages.create(data)
         console.log(response)
+    }
     console.log(`Operation complete.`)
 }
-
-createNotionPage()
